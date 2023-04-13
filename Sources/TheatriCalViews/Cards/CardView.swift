@@ -80,26 +80,28 @@ struct CardView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             CardView {
-                Image("play-photo")
+                Image(systemName: "theatermasks")
                     .resizable()
                     .scaledToFit()
             } overlay: {
                 Image(systemName: "theatermasks.fill")
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.tint)
             } content: {
                 Text("Shakespeare for Breakfast")
                     .font(.title)
             }
 
             CardView {
-                Image("play-photo")
-                    .resizable()
-                    .scaledToFit()
+                Color.blue
+                    .frame(height: 200)
             } content: {
                 Text("Shakespeare for Breakfast")
                     .font(.title)
+                Text("C Venues, Edinburgh")
+                    .foregroundStyle(.tint)
             }
         }
+        .tint(.green)
         .padding()
     }
 }
