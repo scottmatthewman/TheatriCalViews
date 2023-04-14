@@ -14,9 +14,9 @@ import SwiftUI
 /// be set to a view that visually describes the purpose of selecting content in the picker. A label for the
 /// case where the selected property is `nil` may also be provided.
 ///
-/// `OptionalPicker` works on the basis that the selected item is one of the provided collection; it
-/// does not currently cater for stroing a separate identifying value (such as an indentifier) as the selection.
-///
+/// Unlike a standard `Picker`, `OptionalPicker`works on the basis that the selected item is one
+/// of the provided collection. This means that the object in the `selection` binding must conform to
+/// both `Hashable` (so it is useable as a tag within the picker) and `Identifiable`.
 public struct OptionalPicker<
     Title: View,
     Data: RandomAccessCollection<Item>,
@@ -29,6 +29,14 @@ public struct OptionalPicker<
     @Binding private var selection: Item?
     private var label: (Item) -> Label
 
+    /// Create an OptionalPicker
+    ///
+    /// - Parameters:
+    ///   - items: A collection of objects to pick from
+    ///   - selection: A binding to a propetry that determines the currently selected option (or none)
+    ///   - whenNone: The text to display for the option for no selection. Defaults to `"None"`
+    ///   - label: A view that presents each option.
+    ///   - title: A view that describes the purpose of selecting an option.
     public init(
         _ items: Data,
         selection: Binding<Item?>,

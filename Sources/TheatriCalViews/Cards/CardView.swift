@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-
+/// A rectangular view consisting of an image with text (or other view) below, and external shadow
 public struct CardView<Image: View, Overlay: View, Content: View>: View {
     @Environment(\.colorScheme) private var colorScheme
 
@@ -18,6 +18,16 @@ public struct CardView<Image: View, Overlay: View, Content: View>: View {
     @ViewBuilder var overlay: () -> Overlay
     @ViewBuilder var content: () -> Content
 
+    /// Construct a card with image overlaid with a custom view, and a custom view below
+    ///
+    /// The overlay view is aligned with the bottom leading edge of the image.
+    ///
+    /// - Parameters:
+    ///   - cornerRadius: the radius of the card's rounded corners
+    ///   - spacing: spacing within the card's elements
+    ///   - image: a `View` forming the image in the upper portion of the card
+    ///   - overlay: a `View` to overlay the image (aligned from bottom leading edge)
+    ///   - content: the `View` forming the lower section of the card
     public init(
         cornerRadius: CGFloat = 10,
         spacing: Double = 6,
@@ -62,6 +72,14 @@ public struct CardView<Image: View, Overlay: View, Content: View>: View {
 }
 
 extension CardView {
+    /// Construct a card with image above and a custom view below
+    ///
+    /// - Parameters:
+    ///   - cornerRadius: the radius of the card's rounded corners
+    ///   - spacing: spacing within the card's elements
+    ///   - image: a `View` forming the image in the upper portion of the card
+    ///   - overlay: a `View` to overlay the image (aligned from bottom trailing edge)
+    ///   - content: the `View` forming the lower section of the card
     public init(
         cornerRadius: CGFloat = 10,
         spacing: Double = 6,

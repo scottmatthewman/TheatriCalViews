@@ -8,11 +8,20 @@
 import PhotosUI
 import SwiftUI
 
+/// A custom wrapper around PhotoPicker that allows for the selection of an image.
 public struct ImagePicker: View {
     @Binding var uiImage: UIImage?
     private var titleKey: LocalizedStringKey
     @StateObject private var imageModel = ImagePickerModel()
 
+    /// Creates an ImagePicker button bound to an optional `UIImage`. When the bound
+    /// variable is `nil`, displays a button that activates a `PhotoPicker`. When the
+    /// variable is a `uiImage`, the image is displayed with a cancel button in the top trailing
+    /// corner.
+    ///
+    /// - Parameters:
+    ///   - uiImage: A binding to a property that stores the selected image
+    ///   - titleKey: The text to display on the selection button. Defaults to **Select Image...**
     public init(
         uiImage: Binding<UIImage?>,
         titleKey: LocalizedStringKey = "Select Image..."
