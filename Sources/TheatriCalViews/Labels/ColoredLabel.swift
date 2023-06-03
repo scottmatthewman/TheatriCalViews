@@ -7,19 +7,18 @@
 
 import SwiftUI
 
-/// A text view with colored background
-public struct ColoredLabel<S: StringProtocol>: View {
+public struct ColoredLabel<Title: View>: View {
     @Environment(\.controlSize) private var controlSize
-    private var text: S
+    private var title: Title
     private var color: Color
 
-    public init(_ text: S, color: Color) {
-        self.text = text
+    public init(color: Color, @ViewBuilder title: () -> Title) {
+        self.title = title()
         self.color = color
     }
 
     public var body: some View {
-        Text(text)
+        title
             .font(fontSize)
             .fontWeight(fontWeight)
             .foregroundStyle(color.contrastColor)
@@ -73,6 +72,14 @@ public struct ColoredLabel<S: StringProtocol>: View {
             RoundedRectangle(cornerRadius: 4)
         default:
             Capsule()
+        }
+    }
+}
+
+public extension ColoredLabel where Title == Text {
+    init(_ text: any StringProtocol, color: Color) {
+        self.init(color: color) {
+            Text(text)
         }
     }
 }
