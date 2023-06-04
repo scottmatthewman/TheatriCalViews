@@ -9,10 +9,13 @@ import SwiftUI
 
 public struct VerticalLabelStyle: LabelStyle {
     public func makeBody(configuration: Configuration) -> some View {
-        VStack {
+        VStack(spacing: 8) {
             configuration.icon
+                .frame(maxHeight: 44)
             configuration.title
         }
+        .imageScale(.large)
+        .frame(maxWidth: .infinity)
     }
 }
 
