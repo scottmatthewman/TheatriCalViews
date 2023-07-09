@@ -5,17 +5,17 @@
 //  Created by Scott Matthewman on 11/10/2022.
 //
 
+import Observation
 import SwiftUI
 
-@MainActor
-internal class URLFieldModel: ObservableObject {
-    @Published var text: String
-    @Published var isFocused: Bool
-
-    private var showPasteButton: PasteButtonDisplayType
+@Observable
+internal class URLFieldModel {
+    @ObservationIgnored var text: Binding<String>
+    var isFocused: Bool = false
+    var showPasteButton: PasteButtonDisplayType = .whenFocused
 
     init(
-        text: String,
+        text: Binding<String>,
         isFocused: Bool,
         showPasteButton: PasteButtonDisplayType
     ) {
@@ -29,7 +29,7 @@ internal class URLFieldModel: ObservableObject {
               url.absoluteString.starts(with: "https://")
         else { return }
 
-        text = url.absoluteString
+        text.wrappedValue = url.absoluteString
     }
 
     var isShowingPasteButton: Bool {
@@ -68,11 +68,10 @@ public enum PasteButtonDisplayType {
 /// it will become active when a URL is on the clipboard.
 public struct URLField<Label: View>: View {
     private var label: () -> Label
-    @Binding private var text: String
     private var showPasteButton: PasteButtonDisplayType
     @FocusState private var isFocused: Bool
 
-    @StateObject private var model: URLFieldModel
+    @State private var model: URLFieldModel
 
     /// Create a `TextField` geared towards URL entry.
     /// - Parameters:
@@ -85,24 +84,25 @@ public struct URLField<Label: View>: View {
         label: @escaping () -> Label
     ) {
         let model = URLFieldModel(
-            text: text.wrappedValue,
+            text: text,
             isFocused: false,
             showPasteButton: showPasteButton
         )
-        self._model = StateObject(wrappedValue: model)
+        self._model = State(wrappedValue: model)
 
         self.label = label
-        self._text = text
         self.showPasteButton = showPasteButton
     }
 
     public var body: some View {
         HStack {
-            TextField(text: $model.text, prompt: Text("https://"), label: label)
+            TextField(text: model.text, prompt: Text("https://"), label: label)
+                #if os(iOS)
                 .textInputAutocapitalization(.never)
                 .autocorrectionDisabled()
                 .textContentType(.URL)
                 .keyboardType(.URL)
+                #endif
                 .focused($isFocused)
             if model.isShowingPasteButton {
                 PasteButton(payloadType: URL.self) { urls in
@@ -112,12 +112,8 @@ public struct URLField<Label: View>: View {
                 .buttonBorderShape(.capsule)
             }
         }
-        // synchronize required SwiftUI properties with the view model,
-        // and vice versa
-        .onChange(of: model.text) { text = $0 }
-        .onChange(of: text) { model.text = $0 }
-        .onChange(of: model.isFocused) { isFocused = $0 }
-        .onChange(of: isFocused) { model.isFocused = $0 }
+        .onChange(of: model.isFocused) { isFocused = model.isFocused }
+        .onChange(of: isFocused) { model.isFocused = isFocused }
     }
 }
 

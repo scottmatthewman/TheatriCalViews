@@ -43,13 +43,13 @@ public struct ImagePicker: View {
         } else {
             PhotosPicker(selection: $imageModel.imageSelection) {
                 Label(titleKey, systemImage: "photo.on.rectangle.angled")
-                    .onChange(of: imageModel.imageState, perform: updateImageState)
+                    .onChange(of: imageModel.imageState, updateImageState)
             }
         }
     }
 
-    private func updateImageState(_ imageState: ImagePickerModel.ImageState) {
-        switch imageState {
+    private func updateImageState() {
+        switch imageModel.imageState {
         case .empty, .failure:
             uiImage = nil
         case .success(let image):

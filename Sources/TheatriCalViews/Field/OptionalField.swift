@@ -34,8 +34,8 @@ public struct OptionalField<Value: Equatable, Label: View, Content: View>: View 
                 content($value)
             }
         }
-        .onChange(of: isSelected) { _ in updateBoundValue() }
-        .onChange(of: value) { _ in updateBoundValue() }
+        .onChange(of: isSelected, updateBoundValue)
+        .onChange(of: value, updateBoundValue)
     }
 
     private func updateBoundValue() {

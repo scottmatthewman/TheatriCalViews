@@ -49,6 +49,8 @@ public struct ColoredLabel<Title: View>: View {
             return .caption
         case .mini:
             return .caption2
+        case .extraLarge:
+            return .body
         @unknown default:
             return .caption
         }
